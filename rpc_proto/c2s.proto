@@ -1,0 +1,12 @@
+package c2s.rpc;
+
+message IMRequest {
+	optional string im_session = 1;
+	required bytes data = 2;
+}
+
+message Register {
+	required uint64 uin 	= 1;
+	optional session	= 2;
+}
+
