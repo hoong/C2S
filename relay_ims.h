@@ -3,12 +3,12 @@
 
 namespace c2s
 {
-class RelayIMS:public IRelayTarget
+class RelayIMS:public RelayTarget
 {
 public:
-	virtual ~IRelayIMS();
-	virtual void send(uint64_t& business_id,service_engine::rpc::MessageBody& body);
-	virtual boost::shared_ptr<C2SHandler> get(uint64_t& business_id);
+	virtual ~RelayIMS(){};
+	virtual void relay(uint64_t& uin,service_engine::rpc::MessageBody& body);
+	virtual boost::shared_ptr<C2SHandler> relayHandler(uint64_t& uin);
 
 };
 

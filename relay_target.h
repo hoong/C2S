@@ -1,22 +1,41 @@
 #ifndef RELAY_TARGET_H_
 #define RELAY_TARGET_H_
 
-#include <stdint.h>
 #include "c2s_handler.h"
-#include <boost/shared_ptr.hpp>
 #include "rpc_proto/rpc.pb.h"
+#include "singleton.h"
+#include <map>
+#include <string>
+#include <stdint.h>
+#include <boost/shared_ptr.hpp>
 
 namespace c2s
 {
 
-class IRelayTarget
+class RelayTarget
 {
 public:
-	virtual ~IRelayTarget();
-	virtual void send(uint64_t& business_id,service_engine::rpc::MessageBody& body) = 0;
-	virtual boost::shared_ptr<C2SHandler> get(uint64_t& business_id) = 0;
+	virtual ~RelayTarget();
+	virtual void relay(uint64_t& ,service_engine::rpc::MessageBody& ) = 0;
+	virtual boost::shared_ptr<C2SHandler> relayHandler(uint64_t& ) = 0;
 
 };
+
+
+class RelayTargetManager
+{
+public:
+	RelayTargetManager() {}
+	~RelayTargetManager() {}
+	void set(const std::string& key,boost::shared_ptr<RelayTarget> value);
+	boost::shared_ptr<RelayTarget> get(const std::string& key);
+	
+private:
+	std::map<std::string,boost::shared_ptr<RelayTarget> > map_;
+};
+
+typedef base::Singleton<RelayTargetManager> RTM;
+
 
 }
 

@@ -10,7 +10,7 @@ namespace c2s
 class ClientConnection
 {
 	uint64_t connection_id_;
-	uint64_t bussiness_id_;
+	uint64_t uin_;
 
 };
 
