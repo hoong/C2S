@@ -21,6 +21,16 @@ public:
 
 };
 
+class RelayLine
+{
+public:
+	RelayLine(boost::shared_ptr<RelayTarget> from,boost::shared_ptr<RelayTarget> to)
+		:from_(from),to_(to){}
+	RelayLine(const RelayLine& rl):from_(rl.from_),to_(rl.to_){}
+	boost::shared_ptr<RelayTarget> from_;
+	boost::shared_ptr<RelayTarget> to_;
+};
+
 
 class RelayTargetManager
 {

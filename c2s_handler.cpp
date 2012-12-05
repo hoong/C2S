@@ -45,9 +45,5 @@ int C2SHandler::onDisconnected()
 	return 0;
 }
 
-void C2SHandler::clientInit()
-{
-
-}
 
 } /* namespace c2s */

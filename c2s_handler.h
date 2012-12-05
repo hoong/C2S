@@ -29,14 +29,10 @@ public:
 
 public:
 	virtual void relay() = 0;
-/*
-public:
+
+protected:
 	uint64_t conn_id_;
-	uint64_t uin_;
-	boost::shared_ptr<RelayTarget> from_;
-	boost::shared_ptr<RelayTarget> to_;
-	boost::shared_ptr<C2SHandler> ims_handler_;
-*/
+	RelayLine line_;
 
 };
 
