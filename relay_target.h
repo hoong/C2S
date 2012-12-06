@@ -18,6 +18,10 @@ public:
 	virtual ~RelayTarget();
 	virtual void relay(uint64_t& ,service_engine::rpc::MessageBody& ) = 0;
 	virtual boost::shared_ptr<C2SHandler> relayHandler(uint64_t& ) = 0;
+	/*
+	virtual void registerHandler(std::string& ,boost::shared_ptr<C2SHandler>) =0;
+	virtual void unregisterHandler(std::string& ,boost::shared_ptr<C2SHandler>) =0;
+	*/
 
 };
 

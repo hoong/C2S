@@ -19,7 +19,7 @@ namespace c2s
 class C2SHandler : public base::packet::PacketHandler
 {
 public:
-	C2SHandler(int fd, const base::net::SockAddr& addr, boost::shared_ptr<base::net::ReactorImpl> reactor_impl);
+	C2SHandler(int fd, const base::net::SockAddr& addr, boost::shared_ptr<base::net::ReactorImpl> reactor_impl,RelayLine& line);
 	virtual ~C2SHandler();
 
 public:
@@ -27,8 +27,9 @@ public:
 	virtual int onPacketArrive(const base::packet::Header& header, base::packet::Packet& body);
 	virtual int onDisconnected();
 
+	void sendFailedResponse(const rpc::MessageBody& request_body, int err_code, const char* err_msg);
 public:
-	virtual void relay() = 0;
+	virtual void relay(service_engine::rpc::MessageBody& body) ;
 
 protected:
 	uint64_t conn_id_;
