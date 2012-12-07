@@ -6,13 +6,19 @@
  */
 
 #include "c2s_handler.h"
-#include "relay_target_manager.h"
+#include "rpc_handler.h"
+//#include "relay_target_manager.h"
+
+using namespace service_engine;
 
 namespace c2s
 {
 
-C2SHandler::C2SHandler(int fd, const base::net::SockAddr& addr, boost::shared_ptr<base::net::ReactorImpl> reactor_impl,RelayLine& line)
-: base::packet::PacketHandler(fd, addr, reactor_impl),conn_id_(0),uin_(0),line_(line)
+C2SHandler::C2SHandler(int fd, const base::net::SockAddr& addr, boost::shared_ptr<base::net::ReactorImpl> reactor_impl,RelayLine& line,boost::shared_ptr<RelayStubsScheduler> scheduler)
+: base::packet::PacketHandler(fd, addr, reactor_impl),
+	conn_id_(0),
+	line_(line),
+	scheduler_(scheduler)
 {
 }
 
@@ -31,6 +37,25 @@ int C2SHandler::onPacketArrive(const base::packet::Header& header, base::packet:
 {
 	LOG(trace) << "c2s packet arrive: " << header << ENDL;
 
+	try
+	{
+		PacketInputStream packetinput(body);
+		::google::protobuf::io::CodedInputStream in(&packetinput);
+
+		auto_ptr<rpc::MessageBody> mb(new rpc::MessageBody);
+		if (!mb->ParseFromCodedStream(&in))
+			THROW_RPC_CALL_EXCEPTION(rpc::EC_RPC_PARSE_ERROR, "parse error!");
+
+		if (scheduler_)
+		{
+			scheduler_->invokeStub(boost::static_pointer_cast<C2SHandler>(this->shared_from_this()), mb);
+		}
+
+	}
+	catch (exception& e)
+	{
+		LOG(error) << EXCEPTION_DIAG_INFO(e);
+	}
 	return 0;
 }
 
@@ -40,7 +65,7 @@ int C2SHandler::onDisconnected()
 	return 0;
 }
 
-virtual void C2SHandler::relay(service_engine::rpc::MessageBody& body)
+void C2SHandler::relay(service_engine::rpc::MessageBody& body)
 {
 	try
 	{

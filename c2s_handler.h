@@ -11,6 +11,7 @@
 #include "base/packet/packet_handler.h"
 #include "rpc_handler.h"
 #include "relay_target.h"
+#include "relay_stub.h"
 
 namespace c2s
 {
@@ -19,7 +20,11 @@ namespace c2s
 class C2SHandler : public base::packet::PacketHandler
 {
 public:
-	C2SHandler(int fd, const base::net::SockAddr& addr, boost::shared_ptr<base::net::ReactorImpl> reactor_impl,RelayLine& line);
+	C2SHandler(int fd, 
+		const base::net::SockAddr& addr, 
+		boost::shared_ptr<base::net::ReactorImpl> reactor_impl,
+		RelayLine& line,
+		boost::shared_ptr<RelayStubsScheduler> scheduler);
 	virtual ~C2SHandler();
 
 public:
@@ -34,7 +39,8 @@ public:
 protected:
 	uint64_t conn_id_;
 	RelayLine line_;
-
+private:
+	boost::shared_ptr<RelayStubsScheduler> scheduler_;
 };
 
 } /* namespace c2s */

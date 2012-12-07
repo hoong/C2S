@@ -8,6 +8,8 @@
 #include "base/threadpool.h"
 
 
+namespace c2s
+{
 // RelayMethod
 
 class SE_API RelayMethodBase : public boost::enable_shared_from_this<RelayMethodBase>
@@ -26,7 +28,6 @@ struct RelayMethodParam
 	auto_ptr<rpc::MessageBody>& request_body;
 };
 
-template <class MESSAGE>
 class SE_API RelayMethod : public RelayMethodBase
 {
 
@@ -175,11 +176,21 @@ struct SE_API RelayStub
 	}
 };
 
+class RelayStubsScheduler;
+class SE_API RelayStubsPool
+{
+	friend class RelayStubsScheduler;
+public:
+	RelayStubsPool(boost::shared_ptr<RelayStubsPoolTraits> traits);
+	virtual ~RelayStubsPool();
+
+private:
+	boost::shared_ptr<RelayStubsPoolTraits> sp_pool_traits_;
+};
 
 
 class RelayStubsScheduler
 {
-	friend class RelayStubsManager;
 public:
 	RelayStubsScheduler(boost::shared_ptr<RelayStubsPoolTraits> pool_traits);
 	virtual ~RelayStubsScheduler();
@@ -200,6 +211,7 @@ private:
 };
 
 
+}
 
 
 #endif
