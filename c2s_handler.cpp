@@ -26,14 +26,13 @@ C2SHandler::~C2SHandler()
 {
 }
 
-int C2SHandler::onOpen()
+void C2SHandler::onOpen()
 {
 	LOG(info) << "c2s handler open: " << addr() << ENDL;
 
-	return 0;
 }
 
-int C2SHandler::onPacketArrive(const base::packet::Header& header, base::packet::Packet& body)
+void C2SHandler::onPacketArrive(const base::packet::Header& header, base::packet::Packet& body)
 {
 	LOG(trace) << "c2s packet arrive: " << header << ENDL;
 
@@ -56,13 +55,11 @@ int C2SHandler::onPacketArrive(const base::packet::Header& header, base::packet:
 	{
 		LOG(error) << EXCEPTION_DIAG_INFO(e);
 	}
-	return 0;
 }
 
-int C2SHandler::onDisconnected()
+void C2SHandler::onDisconnected()
 {
 	LOG(info) << "c2s handler disconnected: " << addr() << ENDL;
-	return 0;
 }
 
 void C2SHandler::relay(service_engine::rpc::MessageBody& body)

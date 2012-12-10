@@ -3,6 +3,8 @@
 
 #include "c2s_handler.h"
 #include "singleton.h"
+#include "pch.h"
+#include "base/net/acceptor.h"
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
@@ -40,17 +42,44 @@ public:
 		boost::shared_ptr<base::net::ReactorImpl> reactor_impl,
 		RelayLine& line,
 		boost::shared_ptr<RelayStubsScheduler> scheduler):
-		C2SHandler(fd,addr,reactor_impl,line,scheduler){}
+		C2SHandler(fd,addr,reactor_impl,line,scheduler),uin_(0) {}
 
 	virtual ~C2SClientHandler(){}
 
 public:
-	virtual int onOpen();
+	virtual void onOpen();
 //	virtual int onPacketArrive(const base::packet::Header& header, base::packet::Packet& body);
-	virtual int onDisconnected();
+	virtual void onDisconnected();
 
+	uint64_t uin_;
 
 };
+
+/*
+class C2SClientHandlerCreatorStrategy:public HandlerCreatorStrategyBase
+{
+public:
+	C2SClientHandlerCreatorStrategy(RelayLine& line,boost::shared_ptr<RelayStubsScheduler> scheduler) :line_(line),scheduler_(scheduler) {}
+	virtual ~C2SClientHandlerCreatorStrategy() {}
+	virtual boost::shared_ptr<RefHandler> create(int fd, const SockAddr& addr, boost::shared_ptr<ReactorImpl> reactor_impl);
+
+private:
+	RelayLine line_;
+	boost::shared_ptr<RelayStubsScheduler> scheduler_;
+};
+*/
+
+class SE_API C2SClientAcceptor
+{
+public:
+	C2SClientAcceptor(int listen_port,RelayLine line, RelayStubsScheduler* scheduler);
+	virtual ~C2SClientAcceptor();
+
+private:
+	auto_ptr<base::net::Acceptor> acceptor_;
+};
+
+
 
 }
 

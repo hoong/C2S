@@ -1,4 +1,4 @@
-#include "relay_target_manager.h"
+#include "relay_target.h"
 
 namespace c2s
 {

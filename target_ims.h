@@ -1,12 +1,12 @@
-#ifndef TARGET_SERVER_H_
-#define TARGET_SERVER_H_
+#ifndef TARGET_IMS_H_
+#define TARGET_IMS_H_
 
 namespace c2s
 {
-class TargetServer:public RelayTarget
+class TargetIMS:public RelayTarget
 {
 public:
-	virtual ~TargetServer(){}
+	virtual ~TargetIMS(){}
 	virtual void relay(uint64_t& uin,service_engine::rpc::MessageBody& body);
 	virtual boost::shared_ptr<C2SHandler> relayHandler(uint64_t& uin);
 	/*

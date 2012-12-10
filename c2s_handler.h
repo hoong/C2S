@@ -16,7 +16,6 @@
 namespace c2s
 {
 
-//class C2SHandler : public service_engine::RpcHandler
 class C2SHandler : public base::packet::PacketHandler
 {
 public:
@@ -28,11 +27,19 @@ public:
 	virtual ~C2SHandler();
 
 public:
-	virtual int onOpen();
-	virtual int onPacketArrive(const base::packet::Header& header, base::packet::Packet& body);
-	virtual int onDisconnected();
+	virtual void onOpen();
+	virtual void onPacketArrive(const base::packet::Header& header, base::packet::Packet& body);
+	virtual void onDisconnected();
 
 	void sendFailedResponse(const rpc::MessageBody& request_body, int err_code, const char* err_msg);
+	uint64_t conn_id()
+	{
+		return conn_id_;
+	}
+	RelayLine line()
+	{
+		return line_;
+	}
 public:
 	virtual void relay(service_engine::rpc::MessageBody& body) ;
 
@@ -42,6 +49,24 @@ protected:
 private:
 	boost::shared_ptr<RelayStubsScheduler> scheduler_;
 };
+
+template<typename HANDLER=C2SHandler>
+class C2SHandlerCreatorStrategy:public HandlerCreatorStrategyBase
+{
+public:
+	C2SClientHandlerCreatorStrategy(RelayLine& line,boost::shared_ptr<RelayStubsScheduler> scheduler) :line_(line),scheduler_(scheduler) {}
+	virtual ~C2SClientHandlerCreatorStrategy() {}
+	virtual boost::shared_ptr<RefHandler> create(int fd, const SockAddr& addr, boost::shared_ptr<ReactorImpl> reactor_impl)
+	{
+		return boost::shared_ptr<base::net::RefHandler>(new HANDLER(fd,addr,reactor_impl,line_,scheduler_));
+	}
+
+private:
+	RelayLine line_;
+	boost::shared_ptr<RelayStubsScheduler> scheduler_;
+};
+
+
 
 } /* namespace c2s */
 #endif /* C2S_HANDLER_H_ */

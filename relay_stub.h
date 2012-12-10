@@ -44,7 +44,7 @@ public:
 		finish(rpc::EC_RPC_INTERNAL_ERROR, "uncompleted method!");
 	}
 
-	virtual void onCall() = 0;
+	virtual void onCall() ;
 
 public:
 	void finish(int err_code, const char* err_msg)
