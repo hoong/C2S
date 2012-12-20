@@ -73,7 +73,19 @@ RelayStubsScheduler::~RelayStubsScheduler()
 
 void RelayStubsScheduler::invokeStub(boost::shared_ptr<C2SHandler> handler, auto_ptr<rpc::MessageBody>& request_body)
 {
-	func(handler,request_body,sp_pool_traits_);
+	std::vector<PickNote>::iterator it;
+	for (it = pick_list_.begin(); it!= pick_list_.end(); it++ )
+	{
+		if (it->pick_->pick(request_body))
+		{
+			it->func_(handler,request_body,sp_pool_traits);
+			return ;
+		}
+
+	}
+
+	THROW_RPC_CALL_EXCEPTION(rpc::EC_RPC_METHOD_NOT_FOUND, "method not found");
+
 }
 
 
