@@ -22,7 +22,6 @@ public:
 	C2SHandler(int fd, 
 		const base::net::SockAddr& addr, 
 		boost::shared_ptr<base::net::ReactorImpl> reactor_impl,
-		RelayLine& line,
 		boost::shared_ptr<RelayStubsScheduler> scheduler);
 	virtual ~C2SHandler();
 
